@@ -1,0 +1,67 @@
+{
+  "name": "Hell's Toaster #0000",
+  "symbol": "hells_toaster",
+  "description": "Okay Bears is a culture shift. A clean collection of 10,000 diverse bears building a virtuous community that will transcend the internet into the real world.",
+  "seller_fee_basis_points": 750,
+  "image": "/examples/nft-paper-figures/0000.png",
+  "external_url": "https://skullery.xyz/",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "brown"
+    },
+    {
+      "trait_type": "Body",
+      "value": "star"
+    },
+    {
+      "trait_type": "BodyColor",
+      "value": "sand"
+    },
+    {
+      "trait_type": "Face",
+      "value": "angry"
+    }
+  ],
+  "collection": {
+    "name": "Paper Figures"
+  },
+  "properties": {
+    "files": [
+      {
+        "uri": "/examples/nft-paper-figures/0000.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image",
+    "creators": [
+      {
+        "address": "!TODO",
+        "share": 100
+      }
+    ],
+    "nftfx": {
+      "version": "0.2",
+      "width": 500,
+      "height": 500,
+      "baseUrl": "/examples/nft-paper-figures",
+      "shaders": {
+        "Background": "/examples/nft-paper-figures/_background.glsl",
+        "Main": "/examples/nft-paper-figures/_main.glsl"
+      },
+      "textures": {
+        "txPaper": "/examples/nft-paper-figures/_paper.jpg",
+        "txBackground": "/examples/nft-paper-figures/Background-$Background$.png",
+        "txBody": "/examples/nft-paper-figures/Body-$Body$.png",
+        "txBodyColor": "/examples/nft-paper-figures/BodyColor-$BodyColor$.png",
+        "txFace": "/examples/nft-paper-figures/Face-$Face$.png"
+      },
+      "uniforms": {
+        "uBackground": 3,
+        "uBody": 0,
+        "uBodyColor": 3,
+        "uFace": 0
+      }
+    }
+  }
+}
