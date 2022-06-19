@@ -35,7 +35,6 @@ export const makeAbsUrl = (metadata: NFTFXMetadata) => (assetUrl: string) => {
     if (url.indexOf('://') !== -1)
         return url;
     let baseUrl = metadata.properties.nftfx.baseUrl;
-    console.log('!!', { url, baseUrl }, url.indexOf(baseUrl));
     if (url.indexOf(baseUrl) === -1) {
         url = baseUrl + (baseUrl.substr(-1, 1) === '/' ? '' : '/') + url;
     }
