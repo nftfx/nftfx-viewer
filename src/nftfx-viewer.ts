@@ -8,6 +8,15 @@ import { makeAbsUrl, makeResourceUrl, MESSAGE_CSS, safeFetch, safeFetchJson, set
 
 type ObservedAttributes = 'width' | 'height' | 'url' | 'autoplay';
 
+const COMPONENT_CSS = {
+    display: `block`,
+    position: 'relative',
+    overflow: 'hidden',
+    backgroundColor: '#333',
+    font: 'bold 13px sans-serif',
+    color: '#eee',
+}
+
 export class NFTFXViewer extends HTMLElement {
 
     public renderer?: THREE.WebGLRenderer;
@@ -63,15 +72,13 @@ export class NFTFXViewer extends HTMLElement {
 
     constructor() {
         super();
-        console.log('[nftfx] Web-component initialization started');
+        console.log('[nftfx] Web-component mounted');
 
-        this.style.width = `${this.width}px`;
-        this.style.height = `${this.height}px`;
-        this.style.display = `block`;
-        this.style.position = 'relative';
-        this.style.backgroundColor = '#333';
-        this.style.font = 'bold 13px sans-serif';
-        this.style.color = '#eee';
+        setStyle(this, {
+            width: `${this.width}px`,
+            height: `${this.height}px`,
+            ...COMPONENT_CSS,
+        });
         setStyle(this.$message, MESSAGE_CSS);
         this.appendChild(this.$message);
 
@@ -82,6 +89,7 @@ export class NFTFXViewer extends HTMLElement {
 
     public async init(newMetadata?: NFTFXMetadata) {
         // CLEANUP
+        console.log('[nftfx.init] Initialization started');
         this.setMessage('NFTFX LOADING...');
         this.isInitialized = false;
         this.uniforms = {}

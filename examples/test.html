@@ -26,8 +26,8 @@
 <body>
     <script type="module">
         //@ts-check
-        // import { NFTFXViewer } from 'https://cdn.jsdelivr.net/gh/nftfx/nftfx-viewer@master/dist/index.esm.js';
-        import { NFTFXViewer } from '../dist/index.esm.js';
+        import { NFTFXViewer } from 'https://cdn.jsdelivr.net/gh/nftfx/nftfx-viewer@master/dist/index.esm.js';
+        // import { NFTFXViewer } from '../dist/index.esm.js';
 
         const delay = async (timeout, value) =>
             new Promise(resolve =>
@@ -101,10 +101,18 @@
                 }
             }
         }
-        const $nft = document.getElementById('nft');
-        $nft.init(TEST_METADATA);
+        // $nft.init(TEST_METADATA);
 
+        const $nft = document.getElementById('nft');
         const tests = [
+            {
+                name: 'Metadata in init parameter: $nft.init(metadata) => success',
+                delay: 0,
+                expected: true,
+                test: () => {
+                    return $nft.init(TEST_METADATA);
+                }
+            },
             {
                 name: 'No metadata: $nft.init() => fails',
                 delay: 2000,
@@ -123,7 +131,7 @@
                 }
             },
             {
-                name: 'No metadata: $nft.init() => fails',
+                name: 'Metadata in SCRIPT: $nft.init() => fails',
                 delay: 2000,
                 expected: true,
                 test: () => {
@@ -197,8 +205,8 @@
         });
     </script>
 
-    <div ßstyle="position: absolute;top: 50%;left: 50px;margin:-250px 0 0 0;">
-        <nftfx-viewer autoplay="true" id="nft" __url="./nft-paper-figures/0000.json" width="500" height="500" />
+    <div style="position: absolute;top: 50%;left: 50px;margin:-250px 0 0 0;">
+        <nftfx-viewer autoplay="true" id="nft" width="500" height="500" />
     </div>
 
     <div id="test_log" style="position: absolute; left: 600px; top: 50px; bottom: 50px; right: 50px;"></div>
