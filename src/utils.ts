@@ -1,21 +1,22 @@
 import { NFTFXMetadata } from "./metaplex-metadata-nftfx";
 
-export type CSSRules = Record<string, string | number>;
+export type CSSRules = Partial<CSSStyleDeclaration>;
 
-export const makeCSSString = (cssRules: CSSRules) =>
-    Object.entries(cssRules)
-        .reduce((acc, [k, v]) => (acc ? acc + '; ' : '') + `${k}: ${v}`, '');
+export const setStyle = (elem: HTMLElement, rules: Partial<CSSStyleDeclaration>) => {
+    Object.entries(rules)
+        .forEach(([k, v]) => (elem.style as any)[k] = v);
+}
 
-export const MESSAGE_CSS = makeCSSString({
+export const MESSAGE_CSS: CSSRules = {
     'position': 'absolute',
     'bottom': '0',
     'width': '100%',
     'margin': '0',
     'padding': '10px 15px',
-    'text-align': 'center',
-    'text-shadow': '0 1px 2px #000',
-    'background-color': '#33333380',
-});
+    'textAlign': 'center',
+    'textShadow': '0 1px 2px #000',
+    'backgroundColor': '#33333380',
+};
 
 export const safeFetchJson = <T>(url: string): Promise<T> =>
     safeFetch(url, 'json');
@@ -42,4 +43,14 @@ export const makeAbsUrl = (metadata: NFTFXMetadata) => (assetUrl: string) => {
         url = window.location.origin + (url[0] === '/' ? '' : '/') + url;
     }
     return url;
+}
+
+export const makeResourceUrl = (metadata: NFTFXMetadata) => {
+    const attributes: Record<string, string | number> = metadata.attributes
+        .reduce((acc, x) => ({ ...acc, [x.trait_type]: x.value }), {});
+
+    return (url: string) =>
+        url.replace(/\$\w+\$/g, x =>
+            (attributes[x.replace(/\$/g, '')] ?? x).toString()
+        );
 }

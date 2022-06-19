@@ -1,0 +1,42 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        nftfx-viewer,
+        canvas {
+            border-radius: 6px;
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -250px 0 0 -250px;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module">
+        // import { NFTFXViewer } from 'https://cdn.jsdelivr.net/gh/nftfx/nftfx-viewer@master/dist/index.esm.js';
+        import { NFTFXViewer } from '../dist/index.esm.js';
+    </script>
+
+    <div class="container">
+        <nftfx-viewer width="500" height="500" autoplay="true" url="./nft-paper-figures/0000.json" />
+    </div>
+</body>
+
+</html>

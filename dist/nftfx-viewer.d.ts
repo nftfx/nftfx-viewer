@@ -1,25 +1,32 @@
 import * as THREE from 'three';
 import { MultipassRenderer } from './multipass-renderer.js';
+import { NFTFXMetadata } from './metaplex-metadata-nftfx';
+declare type ObservedAttributes = 'width' | 'height' | 'url' | 'autoplay';
 export declare class NFTFXViewer extends HTMLElement {
     renderer?: THREE.WebGLRenderer;
     multipassRenderer?: MultipassRenderer;
     allTexturesLoaded?: Promise<boolean>;
+    isInitialized: boolean;
+    frame: number;
     private uniforms;
     private startTime;
-    private metadata;
+    private metadata?;
     private $message;
     static register(): void;
-    static get observedAttributes(): string[];
-    attributeChangedCallback(name: string, oldValue: any, newValue: any): void;
+    static get observedAttributes(): ObservedAttributes[];
+    attributeChangedCallback(name: ObservedAttributes, oldValue: any, newValue: any): void;
     get width(): number;
     get height(): number;
     get url(): string | null;
     get autoplay(): boolean;
     constructor();
-    init(): Promise<void>;
+    init(newMetadata?: NFTFXMetadata): Promise<boolean>;
+    private initRenderer;
+    private loadTextures;
     private getMetadataFromScript;
     private setMessage;
     private renderError;
-    runAnimation(): void;
+    private runAnimation;
     render(doScreenshot?: boolean): string | undefined;
 }
+export {};

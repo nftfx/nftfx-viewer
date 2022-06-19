@@ -1,0 +1,207 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: #eee;
+            font-family: monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        nftfx-viewer,
+        canvas {
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module">
+        //@ts-check
+        // import { NFTFXViewer } from 'https://cdn.jsdelivr.net/gh/nftfx/nftfx-viewer@master/dist/index.esm.js';
+        import { NFTFXViewer } from '../dist/index.esm.js';
+
+        const delay = async (timeout, value) =>
+            new Promise(resolve =>
+                setTimeout(() => resolve(value), timeout)
+            );
+        ;
+        const TEST_METADATA = {
+            "name": "Hell's Toaster #0000",
+            "symbol": "hells_toaster",
+            "description": "Okay Bears is a culture shift. A clean collection of 10,000 diverse bears building a virtuous community that will transcend the internet into the real world.",
+            "seller_fee_basis_points": 750,
+            "image": "/examples/nft-paper-figures/0000.png",
+            "external_url": "https://skullery.xyz/",
+            "attributes": [
+                {
+                    "trait_type": "Background",
+                    "value": "brown"
+                },
+                {
+                    "trait_type": "Body",
+                    "value": "star"
+                },
+                {
+                    "trait_type": "BodyColor",
+                    "value": "sand"
+                },
+                {
+                    "trait_type": "Face",
+                    "value": "angry"
+                }
+            ],
+            "collection": {
+                "name": "Paper Figures"
+            },
+            "properties": {
+                "files": [
+                    {
+                        "uri": "/examples/nft-paper-figures/0000.png",
+                        "type": "image/png"
+                    }
+                ],
+                "category": "image",
+                "creators": [
+                    {
+                        "address": "!TODO",
+                        "share": 100
+                    }
+                ],
+                "nftfx": {
+                    "version": "0.2",
+                    "width": 500,
+                    "height": 500,
+                    "baseUrl": "/examples/nft-paper-figures",
+                    "shaders": {
+                        "Background": "/examples/nft-paper-figures/_background.glsl",
+                        "Main": "/examples/nft-paper-figures/_main.glsl"
+                    },
+                    "textures": {
+                        "txPaper": "/examples/nft-paper-figures/_paper.jpg",
+                        "txBackground": "/examples/nft-paper-figures/Background-$Background$.png",
+                        "txBody": "/examples/nft-paper-figures/Body-$Body$.png",
+                        "txBodyColor": "/examples/nft-paper-figures/BodyColor-$BodyColor$.png",
+                        "txFace": "/examples/nft-paper-figures/Face-$Face$.png"
+                    },
+                    "uniforms": {
+                        "uBackground": 3,
+                        "uBody": 0,
+                        "uBodyColor": 3,
+                        "uFace": 0
+                    }
+                }
+            }
+        }
+        const $nft = document.getElementById('nft');
+        $nft.init(TEST_METADATA);
+
+        const tests = [
+            {
+                name: 'No metadata: $nft.init() => fails',
+                delay: 2000,
+                expected: false,
+                test: () => {
+                    return $nft.init();
+                }
+            },
+            {
+                name: 'Metadata in URL: $nft.init() => success',
+                delay: 2000,
+                expected: true,
+                test: () => {
+                    $nft.setAttribute('url', './nft-paper-figures/0000.json');
+                    return $nft.init();
+                }
+            },
+            {
+                name: 'No metadata: $nft.init() => fails',
+                delay: 2000,
+                expected: true,
+                test: () => {
+                    $nft.removeAttribute('url');
+                    const $script = document.createElement('script');
+                    $script.type = 'text/nftfx';
+                    $script.textContent = JSON.stringify(TEST_METADATA);
+                    $nft.appendChild($script);
+                    return $nft.init()
+                }
+            },
+            {
+                name: 'Turn off autoplay',
+                delay: 2000,
+                expected: true,
+                test: () => {
+                    $nft.setAttribute('autoplay', '');
+                    const frame1 = $nft.frame;
+                    delay(1000);
+                    const frame2 = $nft.frame;
+                    return frame2 === frame1
+                        ? Promise.resolve('ok')
+                        : Promise.reject('autoplay won`t stopped');
+                }
+            },
+            {
+                name: 'Turn on autoplay',
+                delay: 2000,
+                expected: true,
+                test: async () => {
+                    $nft.setAttribute('autoplay', 'true');
+                    const frame1 = $nft.frame;
+                    await delay(1000);
+                    const frame2 = $nft.frame;
+                    return frame2 !== frame1
+                        ? Promise.resolve('ok')
+                        : Promise.reject('autoplay won`t restarted');
+                }
+            },
+        ];
+
+        const $log = document.getElementById('test_log');
+        const runTests = async () => {
+            for (let test of tests) {
+                await delay(test.delay);
+                console.log(`***** STARTED TEST: ${test.name}; EXPECTED: ${test.expected}`);
+                $log.innerHTML = $log.innerHTML + `<p>Started test: ${test.name}</p>`;
+                try {
+                    await test.test();
+                    test.result = true;
+                } catch (e) {
+                    test.result = false;
+                }
+            }
+            $log.innerHTML = $log.innerHTML + `<p><b>Results:</b></p>`;
+        }
+        runTests().then(() => {
+            console.log('');
+            console.log('*** TEST RESULTS: ***');
+            tests
+                .map(test => ([
+                    test.expected === test.result ? '✅' : '❌',
+                    test.name,
+                    `EXPECTED: ${test.expected}`,
+                    `OBTAINED: ${test.result}`,
+                ]))
+                .forEach(msg => {
+                    console.log(...msg);
+                    $log.innerHTML = $log.innerHTML + `<p>${msg.join('; ')}</p>`;
+                });
+        });
+    </script>
+
+    <div ßstyle="position: absolute;top: 50%;left: 50px;margin:-250px 0 0 0;">
+        <nftfx-viewer autoplay="true" id="nft" __url="./nft-paper-figures/0000.json" width="500" height="500" />
+    </div>
+
+    <div id="test_log" style="position: absolute; left: 600px; top: 50px; bottom: 50px; right: 50px;"></div>
+</body>
+
+</html>
