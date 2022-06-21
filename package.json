@@ -1,6 +1,6 @@
 {
-    "name": "shader-art",
-    "version": "1.1.1",
+    "name": "@nftfx/nftfx-viewer",
+    "version": "0.3.0",
     "description": "A web component for rendering NFTFX collectibles",
     "engines": {
         "node": ">=14"
@@ -17,7 +17,10 @@
         "build:types": "tsc -d --emitDeclarationOnly",
         "build:js": "esbuild --format=esm --bundle --minify src/index.ts > dist/index.esm.js",
         "build:cjs": "esbuild --format=cjs --bundle --minify src/index.ts > dist/index.cjs",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run build",
+        "purge-cdn": "curl https://purge.jsdelivr.net/gh/nftfx/nftfx-viewer@master/dist/index.esm.js",
+        "start": "npx http-server",
+        "publish": "npm publish"
     },
     "keywords": [
         "web-component",
