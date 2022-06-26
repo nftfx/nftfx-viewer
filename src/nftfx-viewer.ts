@@ -32,6 +32,7 @@ export class NFTFXViewer extends HTMLElement {
     private startTime: number = 0;
     private metadata?: Promise<NFTFXMetadata>;
     private $message: HTMLDivElement = document.createElement('div');
+    private animationFrame: number = 0;
 
     static register() {
         if (typeof customElements.get('nftfx-viewer') === 'undefined') {
@@ -72,7 +73,11 @@ export class NFTFXViewer extends HTMLElement {
 
     constructor() {
         super();
-        console.log('[nftfx] Web-component mounted');
+        console.log('[nftfx] Constructor called');
+    }
+
+    public connectedCallback() {
+        console.log('[nftfx.connectedCallback] Web-component mounted');
 
         setStyle(this, {
             width: `${this.width}px`,
@@ -90,6 +95,7 @@ export class NFTFXViewer extends HTMLElement {
     public async init(newMetadata?: NFTFXMetadata) {
         // CLEANUP
         console.log('[nftfx.init] Initialization started');
+        window.cancelAnimationFrame(this.animationFrame); // cancel postponed render
         this.setMessage('NFTFX LOADING...');
         this.isInitialized = false;
         this.uniforms = {}
@@ -238,7 +244,7 @@ export class NFTFXViewer extends HTMLElement {
 
     private runAnimation() {
         if (this.isInitialized && this.autoplay)
-            requestAnimationFrame(this.runAnimation.bind(this));
+            this.animationFrame = requestAnimationFrame(this.runAnimation.bind(this));
         this.render();
     }
 

@@ -12,6 +12,7 @@ export declare class NFTFXViewer extends HTMLElement {
     private startTime;
     private metadata?;
     private $message;
+    private animationFrame;
     static register(): void;
     static get observedAttributes(): ObservedAttributes[];
     attributeChangedCallback(name: ObservedAttributes, oldValue: any, newValue: any): void;
@@ -20,6 +21,7 @@ export declare class NFTFXViewer extends HTMLElement {
     get url(): string | null;
     get autoplay(): boolean;
     constructor();
+    connectedCallback(): void;
     init(newMetadata?: NFTFXMetadata): Promise<boolean>;
     private initRenderer;
     private loadTextures;
